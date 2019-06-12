@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <% include ../partials/header.ejs %>
-</head>
+  <head>
+    <% include ../partials/header.ejs %>
+  </head>
+  <body>
+    <% include ../partials/nav.ejs %>
 
-<body>
-  <% include ../partials/nav.ejs %>
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/icons8-mobile-home-64.png">
-    </a>
-    <h1>Where To Live</h1>
-  </div>
-</div>
-</body>
+    <script>
+      $(() => {
+        $('#calculate').click(() => {
+        $.get('/api/distance', (result) => {
+          $('#result').text(result);
+        });
+      });
+    });
+    </script>
+
+    <div class="jumbotron text-center">
+      <div class="container">
+        <a href="/" class="lang-logo">
+          <img src="/icons8-mobile-home-64.png">
+        </a>
+        <h1><%= name %></h1>
+        <h2>The distance is...</h2>
+        <button class="btn btn-primary" id='calculate'>
+          Calculate
+        </button>
+        <div class='pb-1'></div>
+        <span id='result'></span>
+      </div>
+    </div>
+  </body>
 </html>
