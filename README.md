@@ -1,6 +1,6 @@
-# Where TO Live
+# Where To Live
 
-A Node.js app using [Express 4](http://expressjs.com/).
+A Node.js app used to determine possible living locations based on commute locations.
 
 ## Running Locally
 
