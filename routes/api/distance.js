@@ -107,19 +107,21 @@ router.get('/', (req, res) => {
     });
   }
 
-  const home = '2949 Hamilton Ct Bensalem, PA 19020';
+  const home = '229 Market St, Philadelphia, PA 19106';
   let distances = [];  
-  Object.values(eventFrequencies).forEach((place, i) => {
+  let completedCounter = 0;
+  const events = Object.values(eventFrequencies);
+  events.forEach((place) => {
     getDistance(home, place.event.location, (distance, time) => {
+      completedCounter++;
       distances.push({
         'from': home,
         'to': place.event.location,
         'distance': (distance * place.frequency).toFixed(2),
         'time': (time * place.frequency / 3600).toFixed(2),
       });
-      if (i == eventFrequencies.length) {
+      if (completedCounter == events.length) {
         res.json(distances);
-        console.log(distances);
       }
     });
   });
