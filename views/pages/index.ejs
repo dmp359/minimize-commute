@@ -7,10 +7,19 @@
     <% include ../partials/nav.ejs %>
 
     <script>
+      let str = '';
+      let totalDistance = 0, totalTime = 0;
       $(() => {
         $('#calculate').click(() => {
         $.get('/api/distance', (result) => {
-          $('#result').text(result);
+          $.each(result, (i, { from, to, distance, time }) => {
+            str = `From ${from} to ${to}: ${distance} total miles and ${time} hours`;
+            totalDistance += parseFloat(distance);
+            totalTime += parseFloat(time);
+            $('#result').append(`<li>${str}</li>`);
+          });
+          $('#result').append('<br>');
+          $('#result').append(`<li>Total time: ${totalTime} and total distance: ${totalDistance}</li>`);
         });
       });
     });
@@ -27,7 +36,7 @@
           Calculate
         </button>
         <div class='pb-1'></div>
-        <span id='result'></span>
+        <div id='result'></div>
       </div>
     </div>
   </body>
