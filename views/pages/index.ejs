@@ -11,7 +11,8 @@
       let totalDistance = 0, totalTime = 0;
       $(() => {
         $('#calculate').click(() => {
-        $.get('/api/distance', (result) => {
+        const home = $('#homebox').val();
+        $.get('/api/distance', {'home' : home }, (result) => {
           $.each(result, (i, { from, to, distance, time }) => {
             str = `From ${from} to ${to}: ${distance} total miles and ${time} hours`;
             totalDistance += parseFloat(distance);
@@ -31,7 +32,9 @@
           <img src="/icons8-mobile-home-64.png">
         </a>
         <h1><%= name %></h1>
-        <h2>The distance is...</h2>
+        <label>Home address:</label>
+        <input id="homebox" class="form-control" aria-describedby="home" placeholder="Enter address">
+        <h2>Your weekly commute is...</h2>
         <button class="btn btn-primary" id='calculate'>
           Calculate
         </button>

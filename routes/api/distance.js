@@ -106,8 +106,7 @@ router.get('/', (req, res) => {
       }
     });
   }
-
-  const home = '229 Market St, Philadelphia, PA 19106';
+  const home = req.query.home;
   let distances = [];  
   let completedCounter = 0;
   const events = Object.values(eventFrequencies);
