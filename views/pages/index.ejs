@@ -8,9 +8,9 @@
 
     <script>
       let str = '';
-      let totalDistance = 0, totalTime = 0;
       $(() => {
         $('#calculate').click(() => {
+        let totalDistance = 0, totalTime = 0;
         const home = $('#homebox').val();
         $.get('/api/distance', {'home' : home }, (result) => {
           $.each(result, (i, { from, to, distance, time }) => {
