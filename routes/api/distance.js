@@ -68,7 +68,7 @@ const schedule =
     ],
     sunday: [
       {
-        name: 'Mags Waterfont',
+        name: 'Seven Band Acoustic Gig',
         location: '9242 N Delaware Ave, Philadelphia, PA 19114',
         start: 17,
         end: 21,
