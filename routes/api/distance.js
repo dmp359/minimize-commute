@@ -92,7 +92,7 @@ destination=${destination}&\
 mode=driving&\
 arrival_time=${arrival}&\
 key=${key}`;
-  console.log(query);
+
   await request(query, (error, response, body) => {
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     if (error) {
