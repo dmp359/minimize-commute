@@ -2,6 +2,11 @@ const express = require('express')
 const router = express.Router();
 const request = require('request');
 const metersToMiles = (meters) => (meters / 1609.344).toFixed(2);
+const getStartTime = (hour) => {
+  const dt = new Date();
+  dt.setHours(dt.getHours() + hour);
+  return Math.round(dt.getTime() / 1000);
+};
 
 // Example user input data
 const schedule =
@@ -79,9 +84,15 @@ const schedule =
 // Make Google Maps API call
 const key = process.env.GOOGLE_API_KEY;
 let trip;
-async function getDistance(origin, destination, callback) {
-  console.log(`asking for google for ${origin} to ${destination}`);
-  const query = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&mode=driving&key=${key}`;
+async function getDistance(origin, destination, arrival, callback) {
+  console.log(`asking for google for ${origin} to ${destination} at time ${arrival}`);
+  const query = `https://maps.googleapis.com/maps/api/directions/json?\
+origin=${origin}&\
+destination=${destination}&\
+mode=driving&\
+arrival_time=${arrival}&\
+key=${key}`;
+  console.log(query);
   await request(query, (error, response, body) => {
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     if (error) {
@@ -94,6 +105,8 @@ async function getDistance(origin, destination, callback) {
 }
 router.get('/', (req, res) => {
   const eventFrequencies = [];
+
+  // Aggregate all duplicate events to later avoid making duplicate API calls
   for (const key in schedule) {
     let day = schedule[key];
     day.forEach(event => {
@@ -108,17 +121,17 @@ router.get('/', (req, res) => {
   }
   const home = req.query.home;
   let distances = [];  
-  let completedCounter = 0;
+  let completedCounter = 0; // To make sure all events are processed before returning
   const events = Object.values(eventFrequencies);
   events.forEach((place) => {
-    getDistance(home, place.event.location, (distance, time) => {
-      completedCounter++;
+    getDistance(home, place.event.location, getStartTime(place.event.start), (distance, time) => {
       distances.push({
         'from': home,
         'to': place.event.location,
         'distance': (distance * place.frequency).toFixed(2),
         'time': (time * place.frequency / 3600).toFixed(2),
       });
+      completedCounter++;
       if (completedCounter == events.length) {
         res.json(distances);
       }

@@ -12,6 +12,7 @@
         $('#calculate').click(() => {
         let totalDistance = 0, totalTime = 0;
         const home = $('#homebox').val();
+        // TODO: make a new endpoint to return totals
         $.get('/api/distance', {'home' : home }, (result) => {
           $.each(result, (i, { from, to, distance, time }) => {
             str = `From ${from} to ${to}: ${distance} total miles and ${time} hours`;
@@ -33,7 +34,7 @@
         </a>
         <h1><%= name %></h1>
         <label>Home address:</label>
-        <input id="homebox" class="form-control" aria-describedby="home" placeholder="Enter address">
+        <input id="homebox" class="form-control" aria-describedby="home" placeholder="Address">
         <h2>Your weekly commute is...</h2>
         <button class="btn btn-primary" id='calculate'>
           Calculate
