@@ -4,7 +4,7 @@ const request = require('request');
 const metersToMiles = (meters) => (meters / 1609.344).toFixed(2);
 const getStartTime = (hour) => {
   const dt = new Date();
-  dt.setHours(dt.getHours() + hour);
+  dt.setHours(hour);
   return Math.round(dt.getTime() / 1000);
 };
 
