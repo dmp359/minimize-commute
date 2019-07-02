@@ -1,6 +1,9 @@
 const express = require('express')
 const router = express.Router();
 const request = require('request');
+const Trip = require('./Trip.js');
+
+const SECONDS_IN_HOUR = 3600;
 const metersToMiles = (meters) => (meters / 1609.344).toFixed(2);
 const secondsAtHour = (hour) => {
   const dt = new Date();
@@ -84,14 +87,18 @@ const schedule =
 // Make Google Maps API call
 const key = process.env.GOOGLE_API_KEY;
 let trip;
-async function getDistance(origin, destination, departure, callback) {
+async function getDistance(trip, callback) {
+  const { origin, destination, departure } = trip;
   console.log(`asking for google for ${origin} to ${destination} at time ${departure}`);
+  
+  // Build quiery
   const query = `https://maps.googleapis.com/maps/api/directions/json?\
 origin=${origin}&\
 destination=${destination}&\
 mode=driving&\
 departure_time=${departure}&\
 key=${key}`;
+
   await request(query, (error, response, body) => {
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     if (error) {
@@ -123,12 +130,15 @@ router.get('/', (req, res) => {
   let completedCounter = 0; // To make sure all events are processed before returning
   const events = Object.values(eventFrequencies);
   events.forEach((place) => {
-    getDistance(home, place.event.location, secondsAtHour(place.event.start), (distance, time) => {
+    const trip = new Trip(home, place.event.location, secondsAtHour(place.event.start), place.frequency);
+    getDistance(trip, (distance, time) => {
+      trip.duration = (time * trip.frequency / SECONDS_IN_HOUR).toFixed(2); // Store duration in hours
+      trip.distance = (distance * trip.frequency).toFixed(2);
       distances.push({
-        'from': home,
-        'to': place.event.location,
-        'distance': (distance * place.frequency).toFixed(2),
-        'time': (time * place.frequency / 3600).toFixed(2),
+        'from': trip.origin,
+        'to': trip.destination,
+        'distance': trip.distance,
+        'time': trip.duration,
       });
       completedCounter++;
       if (completedCounter == events.length) {
