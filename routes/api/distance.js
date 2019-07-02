@@ -95,10 +95,9 @@ const schedule =
 
 // Make Google Maps API call
 const key = process.env.GOOGLE_API_KEY;
-let trip;
 async function getDistance(trip, callback) {
   const { origin, destination, departure } = trip;
-  console.log(`asking for google for ${origin} to ${destination} at time ${departure}`);
+  console.log(`Asking Google for ${origin} to ${destination} at time ${departure}`);
   
   // Build quiery
   const query = `https://maps.googleapis.com/maps/api/directions/json?\
