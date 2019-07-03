@@ -5,9 +5,6 @@
   </head>
   <body>
     <% include ../partials/nav.ejs %>
-
-    
-
     <div class="jumbotron text-center">
         <a href="/" class="lang-logo">
           <img src="/icons8-mobile-home-64.png">
@@ -15,22 +12,17 @@
         <h1><%= name %></h1>
     </div>
     <% include ../partials/schedule.ejs %>
-        <!-- <h2>Your weekly commute is...</h2>
+        <h2>Your weekly commute is...</h2>
         <button class="btn btn-primary" id='calculate'>
           Calculate
         </button>
         <div class='pb-1'></div>
         <div id='result'></div>
       </div>
-    </div> -->
+    </div>
     <script>
         const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-        // Build schedule UI
-        let $scheduleArea = $('#scheduler');
-        const $row1 = $(`<div id='row-0' class='row'></div>`);
-        const createEventForm = (i) => {
-          const eventFormHTML = `
+        const eventFormHTML = `
           <label for="eventName">Name</label>
           <input type="text" placeholder="Work" name="eventName">
           <br>
@@ -60,6 +52,11 @@
             <span>Add another event
           </div>
           `;
+        
+        // Build schedule UI
+        let $scheduleArea = $('#scheduler');
+        const $row1 = $(`<div id='row-0' class='row'></div>`);
+        const createEventForm = (i) => {
           const $col = $(`<div style='border: 1px solid black' id='col-${i}' class="col-md-4">`);
           const $form = $(`<form id='event-form-${i}'></form>`);
           $col.append($form);
@@ -88,10 +85,20 @@
           $row3.append(createEventForm(i));
         }
         $scheduleArea.append($row3);
+         
+        // Add event button behavior
+         $('div#plus-button').on('click', (e) => {
+            const $parent = $(e.target).parent();
+            $parent.append('<br>');
+            $parent.append(eventFormHTML);
 
-        // Calculate button behavior
-        let str = '';
+            // $('div#plus-button').remove(); TODO: Fix to remove previous button
+        });
         $(() => {
+ 
+          let str = '';
+          
+          // Calculate button behavior
           $('#calculate').click(() => {
           let totalDistance = 0, totalTime = 0;
           const home = $('#homebox').val();
@@ -106,6 +113,11 @@
             $('#result').append('<br>');
             $('#result').append(`<li>Total time: ${totalTime} and total distance: ${totalDistance}</li>`);
           });
+
+          // // Time picker. TODO: Fix
+          // $('#timepicker').datetimepicker({
+          //   format: 'LT'
+          // });
         });
       });
       </script>
