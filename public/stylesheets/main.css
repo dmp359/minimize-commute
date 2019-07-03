@@ -1,7 +1,7 @@
 .jumbotron {
   background: #532F8C;
   color: white;
-  padding-bottom: 80px;
+  padding: 15px 7px;
 }
   
 .jumbotron .btn-primary {
@@ -27,8 +27,6 @@
   display: block;
   border-radius: 50%;
   overflow: hidden;
-  width: 68px;
-  height: 68px;
   margin: auto;
 }
     
@@ -36,6 +34,10 @@
   max-width: 100%;
 }
 
-.pb-1 {
-  padding-bottom: 8px;
+.navbar {
+  margin-bottom: 0px;
+}
+
+#time-column {
+  padding-left: 0px;
 }

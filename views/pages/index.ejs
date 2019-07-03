@@ -28,20 +28,24 @@
     </script>
 
     <div class="jumbotron text-center">
-      <div class="container">
         <a href="/" class="lang-logo">
           <img src="/icons8-mobile-home-64.png">
         </a>
         <h1><%= name %></h1>
-        <label>Home address:</label>
-        <input id="homebox" class="form-control" aria-describedby="home" placeholder="Address">
-        <h2>Your weekly commute is...</h2>
+    </div>
+    <% include ../partials/schedule.ejs %>
+        <!-- <div class="form-group">
+          <h5>Monday</h5>
+          <label for="mondayLabel">Name</label>
+
+        </div> -->
+        <!-- <h2>Your weekly commute is...</h2>
         <button class="btn btn-primary" id='calculate'>
           Calculate
         </button>
         <div class='pb-1'></div>
         <div id='result'></div>
       </div>
-    </div>
+    </div> -->
   </body>
 </html>
