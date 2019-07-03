@@ -6,26 +6,7 @@
   <body>
     <% include ../partials/nav.ejs %>
 
-    <script>
-      let str = '';
-      $(() => {
-        $('#calculate').click(() => {
-        let totalDistance = 0, totalTime = 0;
-        const home = $('#homebox').val();
-        // TODO: make a new endpoint to return totals
-        $.get('/api/distance', {'home' : home }, (result) => {
-          $.each(result, (i, { from, to, distance, time }) => {
-            str = `From ${from} to ${to}: ${distance} total miles and ${time} hours`;
-            totalDistance += parseFloat(distance);
-            totalTime += parseFloat(time);
-            $('#result').append(`<li>${str}</li>`);
-          });
-          $('#result').append('<br>');
-          $('#result').append(`<li>Total time: ${totalTime} and total distance: ${totalDistance}</li>`);
-        });
-      });
-    });
-    </script>
+    
 
     <div class="jumbotron text-center">
         <a href="/" class="lang-logo">
@@ -34,11 +15,6 @@
         <h1><%= name %></h1>
     </div>
     <% include ../partials/schedule.ejs %>
-        <!-- <div class="form-group">
-          <h5>Monday</h5>
-          <label for="mondayLabel">Name</label>
-
-        </div> -->
         <!-- <h2>Your weekly commute is...</h2>
         <button class="btn btn-primary" id='calculate'>
           Calculate
@@ -47,5 +23,91 @@
         <div id='result'></div>
       </div>
     </div> -->
+    <script>
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // Build schedule UI
+        let $scheduleArea = $('#scheduler');
+        const $row1 = $(`<div id='row-0' class='row'></div>`);
+        const createEventForm = (i) => {
+          const eventFormHTML = `
+          <label for="eventName">Name</label>
+          <input type="text" placeholder="Work" name="eventName">
+          <br>
+          <label for="eventLocation">Location</label>
+          <input type="text" placeholder="1234 Fake Street" name="eventLocation">
+          <br>
+          <div class="col-md-6" id='time-column'>
+              <label for="startTime">Start Time</label>
+              <div class='input-group date' id='timepicker'>
+                  <input type='text' class="form-control" />
+                  <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                  </span>
+              </div>
+          </div>
+          <div class="col-md-6" id='time-column'>
+              <label for="endTime">End Time</label>
+              <div class='input-group date' id='timepicker'>
+                  <input type='text' class="form-control" />
+                  <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-time"></span>
+                  </span>
+              </div>
+          </div>
+          <div id='plus-button'>
+            <div class="glyphicon glyphicon-plus"></div>
+            <span>Add another event
+          </div>
+          `;
+          const $col = $(`<div style='border: 1px solid black' id='col-${i}' class="col-md-4">`);
+          const $form = $(`<form id='event-form-${i}'></form>`);
+          $col.append($form);
+          $form.append(`<h3>${daysOfWeek[i]}</h3>`);
+          $form.append(eventFormHTML);
+          return $col;
+        }
+
+        // Generate row 1
+        for (let i = 0; i < 3; i++) { // MTW on row 1
+          $row1.append(createEventForm(i));
+        }
+        $scheduleArea.append($row1);
+
+        // Generate row 2
+        const $row2 = $(`<div id='row-1' class='row'></div>`);
+        for (let i = 3; i < 5; i++) { // TF on row 2
+          $row2.append(createEventForm(i));
+        }
+        $scheduleArea.append($row2);
+
+
+        // Generate row 3
+        const $row3 = $(`<div id='row-2' class='row'></div>`);
+        for (let i = 5; i < 7; i++) { // TF on row 2
+          $row3.append(createEventForm(i));
+        }
+        $scheduleArea.append($row3);
+
+        // Calculate button behavior
+        let str = '';
+        $(() => {
+          $('#calculate').click(() => {
+          let totalDistance = 0, totalTime = 0;
+          const home = $('#homebox').val();
+          // TODO: make a new endpoint to return totals
+          $.get('/api/distance', {'home' : home }, (result) => {
+            $.each(result, (i, { from, to, distance, time }) => {
+              str = `From ${from} to ${to}: ${distance} total miles and ${time} hours`;
+              totalDistance += parseFloat(distance);
+              totalTime += parseFloat(time);
+              $('#result').append(`<li>${str}</li>`);
+            });
+            $('#result').append('<br>');
+            $('#result').append(`<li>Total time: ${totalTime} and total distance: ${totalDistance}</li>`);
+          });
+        });
+      });
+      </script>
   </body>
 </html>
